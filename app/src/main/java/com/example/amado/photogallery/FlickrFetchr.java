@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class FlickrFetchr {
     public static final String TAG = "FlickrFetchr";
-    private static final String ENDPOINT = "https://api.flickr.com/services";
+    private static final String ENDPOINT = "https://api.flickr.com/services/rest/";
     private static final String API_KEY = "4f721bbafa75bf6d2cb5af54f937bb70";
     private static final String METHOD_GET_RECENT = "flickr.photos.getRecent";
     private static final String PARAM_EXTRAS = "extras";
