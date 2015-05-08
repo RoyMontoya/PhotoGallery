@@ -1,8 +1,10 @@
 package com.example.amado.photogallery;
 
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Amado on 13/04/2015.
@@ -21,12 +25,40 @@ public class PhotoGalleryFragment extends Fragment {
     private static final String TAG = "PhotoGalleryFragment";
     GridView mGridView;
     ArrayList<GalleryItem> mItems;
+    ThumbnailDownloader<ImageView> mThumbnailThread;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         new FetchItemsTask().execute();
+
+        mThumbnailThread = new ThumbnailDownloader<ImageView>(new Handler());
+        mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
+                                         @Override
+                                         public void onThumbnailDownloaded(ImageView imageView, Bitmap thumbnail) {
+                                             if (isVisible()) {
+                                                 imageView.setImageBitmap(thumbnail);
+                                             }
+                                         }
+                                     });
+        mThumbnailThread.start();
+        mThumbnailThread.getLooper();
+        Log.i(TAG, "Background thread started");
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mThumbnailThread.clearQueue();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mThumbnailThread.quit();
+        Log.i(TAG , "Background thread destroyed");
     }
 
     @Override
@@ -55,11 +87,29 @@ public class PhotoGalleryFragment extends Fragment {
         if (getActivity() == null || mGridView == null) return;
 
         if (mItems != null) {
-            mGridView.setAdapter(new ArrayAdapter<GalleryItem>(getActivity(),
-                    android.R.layout.simple_gallery_item,
-                    mItems));
+            mGridView.setAdapter(new GalleryItemAdapter(mItems));
         } else {
             mGridView.setAdapter(null);
+        }
+    }
+
+    private class GalleryItemAdapter extends  ArrayAdapter<GalleryItem>{
+        public GalleryItemAdapter(ArrayList<GalleryItem> items){
+            super(getActivity(), 0 , items);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null){
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.gallery_item, parent, false);
+            }
+            ImageView imageView = (ImageView)convertView.findViewById(R.id.gallery_item_imageView);
+            imageView.setImageResource(R.drawable.brian);
+
+            GalleryItem item = getItem(position);
+            mThumbnailThread.queueThumbnail(imageView, item.getUrl());
+
+            return  convertView;
         }
     }
 }
