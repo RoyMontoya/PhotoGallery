@@ -8,6 +8,7 @@ public class GalleryItem {
     private String mId;
     private String mUrl;
 
+
     public String getCaption() {
         return mCaption;
     }
