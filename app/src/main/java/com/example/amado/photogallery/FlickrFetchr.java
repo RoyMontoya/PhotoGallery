@@ -26,6 +26,7 @@ public class FlickrFetchr {
     private static final String METHOD_SEARCH = "flickr.photos.search";
     private static final String PARAM_EXTRAS = "extras";
     public static final String PREF_SEARCH_QUERY = "searchQuery";
+    public static final String PREF_LAST_RESULT_ID = "lastResultId";
     private static final String PARAM_TEXT = "text";
     private static final String EXTRA_SMALL_URL = "url_s";
     private static final String XML_PHOTO = "photo";

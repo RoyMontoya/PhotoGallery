@@ -61,12 +61,12 @@ public class ThumbnailDownloader<Token> extends HandlerThread {
                 if(msg.what == MESSAGE_DOWNLOAD){
                     @SuppressWarnings("unchecked")
                             Token token = (Token)msg.obj;
-                            Log.i(TAG, "Got a request for url: "+ requestMap.get(token));
+                           // Log.i(TAG, "Got a request for url: "+ requestMap.get(token));
                             handleRequest(token);
                 }else if(msg.what== MESSAGE_CACHE){
                     @SuppressWarnings("unchecked")
                             String url = (String)msg.obj;
-                    Log.i(TAG, "Got a cache request for url "+url);
+                    //Log.i(TAG, "Got a cache request for url "+url);
                     handleRequest(url);
                 }
             }
@@ -75,7 +75,7 @@ public class ThumbnailDownloader<Token> extends HandlerThread {
 
     public void queueThumbnail(Token token, String url) {
         if(url==null) return;
-        Log.i(TAG, "got an URL: " + url);
+        //Log.i(TAG, "got an URL: " + url);
         mTotal++;
         requestMap.put(token, url);
 
@@ -102,7 +102,7 @@ public class ThumbnailDownloader<Token> extends HandlerThread {
                 byte[] bitmapBytes = new FlickrFetchr().getUrlBytes(url);
                 bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
                 mCache.put(url, bitmap);
-                Log.i(TAG, "Bitmap created");
+               // Log.i(TAG, "Bitmap created");
             }else{
                 bitmap=(Bitmap)mCache.get(url);
             }
