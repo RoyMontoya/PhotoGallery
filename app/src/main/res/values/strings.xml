@@ -10,5 +10,6 @@
     <string name="stop_polling">Stop Polling</string>
     <string name="new_pictures_title">New PhotoGallery Pictures</string>
     <string name="new_pictures_text">You have new pictures in PhotoGallery</string>
+    <string name="title_activity_photo_page_fragment">PhotoPageFragment</string>
 
 </resources>
